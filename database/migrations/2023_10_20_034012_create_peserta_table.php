@@ -15,11 +15,12 @@ return new class extends Migration
             $table->id();
             $table->string('nama');
             $table->string('asal');
-            $table->date('tgl_mulai')->default(now());;
+            $table->string('tgl_mulai');
             $table->unsignedBigInteger('id_pembimbing')->nullable();
+            $table->string('asal_sekolah')->nullable();
+            $table->string('no_hp')->nullable();
             $table->string('username');
             $table->string('password');
-            $table->rememberToken();
             $table->timestamps();
 
             $table->foreign('id_pembimbing')->references('id')->on('pembimbing');

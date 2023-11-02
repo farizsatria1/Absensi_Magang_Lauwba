@@ -15,6 +15,7 @@ return new class extends Migration
             $table->id();
             $table->unsignedBigInteger('id_peserta');
             $table->date('tgl_masuk');
+            $table->timestamp('jam_masuk');
             $table->timestamps();
 
             $table->foreign('id_peserta')->references('id')->on('peserta');

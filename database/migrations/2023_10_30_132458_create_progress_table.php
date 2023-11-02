@@ -11,14 +11,14 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('progress_pekerjaan', function (Blueprint $table) {
+        Schema::create('progress', function (Blueprint $table) {
             $table->id();
-            $table->unsignedBigInteger('id_pekerjaan');
-            $table->unsignedBigInteger('id_progress');
+            $table->unsignedBigInteger('id_pekerjaan')->nullable();
+            $table->text('catatan');
+            $table->string('foto_dokumentasi')->nullable();
             $table->timestamps();
 
             $table->foreign('id_pekerjaan')->references('id')->on('pekerjaan');
-            $table->foreign('id_progress')->references('id')->on('progress_magang');
         });
     }
 
@@ -27,6 +27,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('progress_pekerjaan');
+        Schema::dropIfExists('progress');
     }
 };

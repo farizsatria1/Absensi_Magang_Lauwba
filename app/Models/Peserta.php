@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Sanctum\HasApiTokens;
@@ -19,6 +20,8 @@ class Peserta extends Authenticatable
         'asal',
         'username',
         'password',
+        'asal_sekolah',
+        'no_hp',
         'tgl_mulai',
         'id_pembimbing'
     ];
@@ -26,4 +29,9 @@ class Peserta extends Authenticatable
         'password',
         'remember_token',
     ];
+
+    public function pembimbing(): BelongsTo
+    {
+        return $this->belongsTo(Pembimbing::class, 'id_pembimbing', 'id');
+    }
 }
