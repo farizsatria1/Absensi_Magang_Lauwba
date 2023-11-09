@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\KeteranganController;
 use App\Http\Controllers\PekerjaanController;
 use App\Http\Controllers\PembimbingController;
 use App\Http\Controllers\PesertaController;
@@ -38,4 +39,8 @@ Route::get('/judul', [PekerjaanController::class, 'index']);
 //API Progress
 Route::post('/tambah-progress', [ProgressController::class, 'tambahProgress']);
 Route::get('/progress/{id_peserta}', [ProgressController::class, 'index']);
+
+//API Keterangan
+Route::post('/keterangan', [KeteranganController::class, 'store']);
+Route::get('/keterangan/{id_peserta}', [KeteranganController::class, 'index']);
 
