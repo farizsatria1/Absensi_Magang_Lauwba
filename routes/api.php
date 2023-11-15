@@ -1,12 +1,12 @@
 <?php
 
-use App\Http\Controllers\KeteranganController;
-use App\Http\Controllers\PekerjaanController;
-use App\Http\Controllers\PembimbingController;
-use App\Http\Controllers\PesertaController;
-use App\Http\Controllers\PresensiMasukController;
-use App\Http\Controllers\PresensiPulangController;
-use App\Http\Controllers\ProgressController;
+use App\Http\Controllers\Api\KeteranganController;
+use App\Http\Controllers\Api\PekerjaanController;
+use App\Http\Controllers\Api\PembimbingController;
+use App\Http\Controllers\Api\PesertaController;
+use App\Http\Controllers\Api\PresensiMasukController;
+use App\Http\Controllers\Api\PresensiPulangController;
+use App\Http\Controllers\Api\ProgressController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 

@@ -1,0 +1,55 @@
+body {
+	margin: 0;
+	padding: 0;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	height: 100vh;
+	background: linear-gradient(to bottom left, black, #282828);
+	color: white;
+	font-family: Arial, sans-serif;
+}
+
+#particles-js {
+	position: absolute;
+	width: 100%;
+	height: 100%;
+	background: linear-gradient(to bottom left, black, #282828);
+}
+
+.card {
+	position: relative;
+	z-index: 1;
+	background-color: rgba(51, 51, 51, 0.8);
+	padding: 20px;
+	border-radius: 10px;
+	box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+	width: 500px; /* Increased width to 500px */
+	height: 400px; /* Set height to 400px */
+	text-align: center;
+	display: flex;
+	flex-direction: column;
+	justify-content: center; /* Center vertically */
+	align-items: center; /* Center horizontally */
+}
+
+.card form {
+	width: 100%; /* Set form width to 100% of the card */
+}
+
+.card input {
+	width: calc(100% - 100px);
+	padding: 15px;
+	margin-bottom: 20px;
+	box-sizing: border-box;
+	border-radius: 5px;
+}
+
+.card button {
+	background-color: #4CAF50;
+	color: white;
+	padding: 15px 40px;
+	border: none;
+	border-radius: 5px;
+	cursor: pointer;
+}

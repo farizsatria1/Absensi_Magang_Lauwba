@@ -13,17 +13,11 @@ class Keterangan extends Model
     protected $fillable = [
         'keterangan',
         'id_peserta',
-        'id_presensi_masuk',
         'catatan'
     ];
 
     public function peserta(): BelongsTo
     {
         return $this->belongsTo(Peserta::class, 'id_peserta', 'id');
-    }
-
-    public function presensi_masuk(): BelongsTo
-    {
-        return $this->belongsTo(PresensiMasuk::class, 'id_presensi_masuk', 'id');
     }
 }

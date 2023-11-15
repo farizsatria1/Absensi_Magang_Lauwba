@@ -14,6 +14,11 @@ class Pekerjaan extends Model
         'judul',
         'id_peserta',
     ];
+
+    public function progress()
+    {
+        return $this->hasMany(Progress::class, 'id_pekerjaan');
+    }
     
     public function peserta(): BelongsTo
     {
