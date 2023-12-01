@@ -11,15 +11,25 @@ class WebPembimbingController extends Controller
 {
     public function index(Request $request)
     {
-        $pembimbing = Pembimbing::latest()->paginate(10);
+        $search = $request->input('search');
+
+        // Jika kata kunci pencarian diberikan, cari Pembimbing berdasarkan nama
+        if ($search) {
+            $pembimbing = Pembimbing::where('nama', 'like', '%' . $search . '%')->latest()->paginate(10);
+        } else {
+            // Jika tidak, dapatkan semua Pembimbing
+            $pembimbing = Pembimbing::latest()->paginate(10);
+        }
 
         return view('pembimbing.pembimbing', [
             'pembimbing' => $pembimbing,
         ]);
     }
 
+
     public function create()
     {
+
         return view('pembimbing.create');
     }
 
@@ -32,17 +42,26 @@ class WebPembimbingController extends Controller
             'password' => 'required|string|min:8',
         ]);
 
-        // Create a new Pembimbing instance and save it to the database
-        Pembimbing::create([
-            'nama' => $validatedData['nama'],
-            'nip' => $validatedData['nip'],
-            'password' => bcrypt($validatedData['password']), // Hash the password before saving
-        ]);
-        Alert::success('Berhasil!', 'Akun Pembimbing Berhasil dibuat');
+        // Check if a Pembimbing with the same nip already exists
+        $existingPembimbing = Pembimbing::where('nip', $validatedData['nip'])->first();
 
-        // Redirect back with a success message
-        return redirect()->route('pembimbing.index')->with('success', 'Pembimbing added successfully!');
+        if ($existingPembimbing) {
+            // Handle the case where a Pembimbing with the same nip already exists
+            Alert::error('Error', 'Nip sudah ada');
+            return redirect()->route('pembimbing.create')->with('error', 'Failed to add Pembimbing');
+        } else {
+            // Create a new Pembimbing instance and save it to the database
+            $pembimbing = Pembimbing::create([
+                'nama' => $validatedData['nama'],
+                'nip' => $validatedData['nip'],
+                'password' => bcrypt($validatedData['password']), // Hash the password before saving
+            ]);
+
+            Alert::success('Success', 'Akun Pembimbing berhasil dibuat');
+            return redirect()->route('pembimbing.index')->with('success', 'Pembimbing added successfully!');
+        }
     }
+
 
     public function destroy($id)
     {
@@ -55,10 +74,10 @@ class WebPembimbingController extends Controller
             Keterangan::where('id_peserta', $peserta->id)->delete();
         }
 
-        // Soft delete Pembimbing
         $pembimbing->delete();
 
         // Redirect kembali dengan pesan sukses
+        Alert::success('Success', 'Akun Pembimbing berhasil dihapus');
         return redirect()->route('pembimbing.index')->with('success', 'Pembimbing berhasil dihapus!');
     }
 
@@ -78,17 +97,27 @@ class WebPembimbingController extends Controller
             'password' => 'sometimes|string|min:8', // Allow password to be empty
         ]);
 
-        // Find the Pembimbing by ID
-        $pembimbing = Pembimbing::findOrFail($id);
+        // Check if a Pembimbing with the same nip already exists
+        $existingPembimbing = Pembimbing::where('nip', $validatedData['nip'])->first();
 
-        // Update Pembimbing details
-        $pembimbing->update([
-            'nama' => $validatedData['nama'],
-            'nip' => $validatedData['nip'],
-            'password' => isset($validatedData['password']) ? bcrypt($validatedData['password']) : $pembimbing->password,
-        ]);
+        if ($existingPembimbing && $existingPembimbing->id != $id) {
+            // Handle the case where a Pembimbing with the same nip already exists
+            Alert::error('Error', 'Nip sudah ada');
+            return redirect()->route('pembimbing.edit', $id)->with('error', 'Failed to update Pembimbing');
+        } else {
+            // Find the Pembimbing by ID
+            $pembimbing = Pembimbing::findOrFail($id);
 
-        // Redirect back with a success message
-        return redirect()->route('pembimbing.index')->with('success', 'Pembimbing updated successfully!');
+            // Update Pembimbing details
+            $pembimbing->update([
+                'nama' => $validatedData['nama'],
+                'nip' => $validatedData['nip'],
+                'password' => isset($validatedData['password']) ? bcrypt($validatedData['password']) : $pembimbing->password,
+            ]);
+
+            // Redirect back with a success message
+            Alert::success('Success', 'Akun Pembimbing berhasil di Update');
+            return redirect()->route('pembimbing.index')->with('success', 'Pembimbing updated successfully!');
+        }
     }
 }

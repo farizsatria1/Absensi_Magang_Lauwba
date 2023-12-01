@@ -33,6 +33,15 @@
                                     @enderror
                                 </div>
 
+                                <!-- Nama Panggilan Input -->
+                                <div class="form-group">
+                                    <label for="nama">Nama Panggilan</label>
+                                    <input type="text" name="nama_pgl" class="form-control" id="nama_pgl" placeholder="Masukkan Nama Panggilan" value="{{ old('nama_pgl', $peserta->nama_pgl) }}">
+                                    @error('nama_pgl')
+                                    <div class="text-danger">{{ $message }}</div>
+                                    @enderror
+                                </div>
+
                                 <!-- Asal Input -->
                                 <div class="form-group">
                                     <label for="asal">Asal</label>
@@ -76,6 +85,21 @@
                                     @enderror
                                 </div>
 
+                                <!-- Hari Piket -->
+                                <div class="mb-3">
+                                    <label class="form-label">Hari Piket</label><br>
+                                    <select class="form-select" name="piket">
+                                        <option value="">--Pilih Hari Piket--</option>
+                                        @foreach (['Senin', 'Selasa', 'Rabu', 'Kamis', 'Jumat'] as $hari)
+                                        <option value="{{ $hari }}" {{ old('piket', $peserta->piket) == $hari ? 'selected' : '' }}>
+                                            {{ $hari }}
+                                        </option>
+                                        @endforeach
+                                    </select>
+                                    @error('piket')
+                                    <div class="text-danger">{{ $message }}</div>
+                                    @enderror
+                                </div>
 
                                 <!-- Username Input -->
                                 <div class="form-group">

@@ -16,14 +16,15 @@ return new class extends Migration
             $table->string('nama');
             $table->string('asal');
             $table->string('tgl_mulai');
+            $table->string('nama_pgl');
             $table->unsignedBigInteger('id_pembimbing')->nullable();
             $table->string('asal_sekolah')->nullable();
-            $table->string('no_hp')->nullable();
-            $table->string('username');
+            $table->string('username')->unique();
             $table->string('password');
             $table->timestamps();
 
-            $table->foreign('id_pembimbing')->references('id')->on('pembimbing');
+            //Cascade untuk menghapus semua data yang saling terhubung
+            $table->foreign('id_pembimbing')->references('id')->on('pembimbing')->onDelete('cascade');
         });
     }
 

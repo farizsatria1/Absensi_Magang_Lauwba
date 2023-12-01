@@ -6,6 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Admin | Absensi Magang</title>
 
+    <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-beta.1/dist/css/select2.min.css" rel="stylesheet" />
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
     <!-- Google Font: Source Sans Pro -->
     <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700&display=fallback">
@@ -41,6 +42,11 @@
             color: #ffffff !important;
             /* Warna teks saat dihover atau aktif */
         }
+
+        .nav-item {
+            margin-bottom: 10px;
+            /* Sesuaikan nilai margin sesuai kebutuhan */
+        }
     </style>
 </head>
 
@@ -70,9 +76,9 @@
         <!-- Main Sidebar Container -->
         <aside class="main-sidebar sidebar-dark-primary elevation-4">
             <!-- Brand Logo -->
-            <a href="index3.html" class="brand-link">
+            <a href="" class="brand-link">
                 <img src="{{asset('template')}}/dist/img/AdminLTELogo.png" alt="AdminLTE Logo" class="brand-image img-circle elevation-3" style="opacity: .8">
-                <span class="brand-text font-weight-light">Admin</span>
+                <span class="brand-text font-weight-light">Absensi Magang</span>
             </a>
 
             <!-- Sidebar -->
@@ -80,10 +86,10 @@
                 <!-- Sidebar user panel (optional) -->
                 <div class="user-panel mt-3 pb-3 mb-3 d-flex">
                     <div class="image">
-                        <img src="{{asset('template')}}/dist/img/user2-160x160.jpg" class="img-circle elevation-2" alt="User Image">
+                        <img src="{{asset('template')}}/dist/img/img-default.jpg" class="img-circle elevation-2" alt="User Image">
                     </div>
                     <div class="info">
-                        <a href="#" class="d-block">Alexander Pierce</a>
+                        <a href="#" class="d-block">Admin</a>
                     </div>
                 </div>
 
@@ -138,6 +144,35 @@
                             </a>
                         </li>
 
+                        <li class="nav-header">Lainnya</li>
+                        <li class="nav-item">
+                            <a href="/piket" class="nav-link">
+                                <i class="nav-icon fas fa-user-clock"></i> <!-- Mengganti ikon -->
+                                <p>
+                                    Piket
+                                </p>
+                            </a>
+                        </li>
+
+                        <li class="nav-item">
+                            <a href="/carousel" class="nav-link">
+                                <i class="nav-icon fas fa-image"></i>
+                                <p>
+                                    Carousel
+                                </p>
+                            </a>
+                        </li>
+
+                        <hr class="sidebar-divider">
+
+                        <li class="nav-item">
+                            <a href="javascript:void(0);" class="nav-link" onclick="logout()">
+                                <i class="nav-icon fas fa-sign-out-alt"></i>
+                                <p>
+                                    Log Out
+                                </p>
+                            </a>
+                        </li>
                     </ul>
                 </nav>
                 <!-- /.sidebar-menu -->
@@ -195,7 +230,16 @@
     <script src="{{asset('template')}}/dist/js/adminlte.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL" crossorigin="anonymous"></script>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-    @include('layouts.sweet')
+    <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-beta.1/dist/js/select2.min.js"></script>
+    <script>
+        $(document).ready(function() {
+            $('#participant').select2();
+        });
+    </script>
 </body>
+@include('layouts.sweet')
+
+</body>
+@include('sweetalert::alert')
 
 </html>

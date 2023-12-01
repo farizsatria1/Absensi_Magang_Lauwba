@@ -17,6 +17,8 @@ class PresensiMasukController extends Controller
             'id_peserta' => 'required|exists:peserta,id',
             'password' => 'required',
             'jam_masuk' => 'required',
+            'coordinat' => 'required',
+            'alamat' => 'required',
         ]);
 
         $peserta = Peserta::findOrFail($validatedData['id_peserta']);
@@ -35,6 +37,8 @@ class PresensiMasukController extends Controller
             $presensiMasuk = PresensiMasuk::create([
                 'id_peserta' => $validatedData['id_peserta'],
                 'jam_masuk' => $validatedData['jam_masuk'],
+                'coordinat' => $validatedData['coordinat'],
+                'alamat' => $validatedData['alamat'],
                 'tgl_masuk' => $today, // Gunakan tanggal hari ini
             ]);
 
@@ -49,6 +53,19 @@ class PresensiMasukController extends Controller
     {
         $id_peserta = $request->input('id_peserta');
         $masuk = PresensiMasuk::where('id_peserta', $id_peserta)->get();
+        return response()->json($masuk);
+    }
+
+    public function index(Request $request, $id_Pembimbing)
+    {
+        $masuk = PresensiMasuk::with(['peserta' => function ($query) {
+            $query->select('id', 'nama', 'nama_pgl', 'id_pembimbing');
+        }])
+            ->whereHas('peserta', function ($query) use ($id_Pembimbing) {
+                $query->where('id_pembimbing', $id_Pembimbing);
+            })
+            ->get();
+
         return response()->json($masuk);
     }
 }

@@ -17,6 +17,8 @@ class PresensiPulangController extends Controller
             'id_peserta' => 'required|exists:peserta,id',
             'password' => 'required',
             'jam_pulang' => 'required',
+            'coordinat' => 'required',
+            'alamat' => 'required',
         ]);
 
         $peserta = Peserta::findOrFail($validatedData['id_peserta']);
@@ -35,6 +37,8 @@ class PresensiPulangController extends Controller
             $presensiPulang = PresensiPulang::create([
                 'id_peserta' => $validatedData['id_peserta'],
                 'jam_pulang' => $validatedData['jam_pulang'],
+                'coordinat' => $validatedData['coordinat'],
+                'alamat' => $validatedData['alamat'],
                 'tgl_pulang' => $today, // Gunakan tanggal hari ini
             ]);
 

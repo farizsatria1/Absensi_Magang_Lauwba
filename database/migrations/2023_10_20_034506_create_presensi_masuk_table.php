@@ -16,9 +16,11 @@ return new class extends Migration
             $table->unsignedBigInteger('id_peserta');
             $table->date('tgl_masuk');
             $table->timestamp('jam_masuk');
+            $table->string('coordinat');
+            $table->text('alamat');
             $table->timestamps();
 
-            $table->foreign('id_peserta')->references('id')->on('peserta');
+            $table->foreign('id_peserta')->references('id')->on('peserta')->onDelete('cascade');
         });
     }
 

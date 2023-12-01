@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
 use App\Models\Pekerjaan;
+use App\Models\Peserta;
 use App\Models\ProgressMagang;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
@@ -18,6 +19,25 @@ class ProgressController extends Controller
 
         return response()->json($progress);
     }
+
+    public function allProgress(Request $request, $id_pembimbing)
+    {
+        $peserta = Peserta::where('id_pembimbing', $id_pembimbing)
+            ->with(['pekerjaan' => function ($query) {
+                $query->select('id', 'id_peserta', 'judul');
+            }, 'pekerjaan.progress' => function ($query) {
+                $query->select('id', 'id_pekerjaan', 'foto_dokumentasi');
+            }])
+            ->select('id', 'id_pembimbing', 'nama')
+            ->get();
+
+        if ($peserta->isEmpty()) {
+            return response()->json(['message' => 'Peserta not found'], 404);
+        }
+
+        return response()->json(['peserta' => $peserta,], 200);
+    }
+
 
     public function tambahProgress(Request $request)
     {

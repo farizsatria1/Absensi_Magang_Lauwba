@@ -26,12 +26,12 @@
                                     <select class="form-control" id="participant" name="participant">
                                         <option value="">--Pilih Peserta--</option>
                                         @php
-                                            $selectedPesertaKeterangan = request('participant');
+                                        $selectedPesertaKeterangan = request('participant');
                                         @endphp
                                         @foreach($pesertaList as $pesertaId => $pesertaName)
-                                            <option value="{{ $pesertaId }}" {{ $pesertaId == $selectedPesertaKeterangan ? 'selected' : '' }}>
-                                                {{ $pesertaName }}
-                                            </option>
+                                        <option value="{{ $pesertaId }}" {{ $pesertaId == $selectedPesertaKeterangan ? 'selected' : '' }}>
+                                            {{ $pesertaName }}
+                                        </option>
                                         @endforeach
                                     </select>
                                 </div>
@@ -48,12 +48,12 @@
                                 </thead>
                                 <tbody>
                                     @foreach($keterangan as $index => $item)
-                                        <tr>
-                                            <td class="align-middle">{{ $index + 1 }}</td>
-                                            <td class="align-middle">{{ $item->peserta->nama }}</td>
-                                            <td class="align-middle">{{ $item->keterangan }}</td>
-                                            <td class="align-middle">{{ $item->catatan }}</td>
-                                        </tr>
+                                    <tr>
+                                        <td class="align-middle">{{ $index + 1 }}</td>
+                                        <td class="align-middle">{{ $item->peserta->nama }}</td>
+                                        <td class="align-middle">{{ $item->keterangan }}</td>
+                                        <td class="align-middle">{{ $item->catatan }}</td>
+                                    </tr>
                                     @endforeach
                                 </tbody>
                             </table>

@@ -13,7 +13,9 @@ class PresensiPulang extends Model
     protected $fillable = [
         'tgl_pulang',
         'jam_pulang',
-        'id_peserta'
+        'id_peserta',
+        'coordinat',
+        'alamat'
     ];
     
     public function peserta(): BelongsTo

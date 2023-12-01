@@ -90,7 +90,10 @@
     <div class="card">
         <img src="{{ asset('img/lauwba.png') }}" alt="Image Alt Text" style="width: 100px; height: 100px; border-radius: 50%;">
         <h1>Admin Login</h1>
-        <form action="{{ route('login') }}" method="post">
+        @if(session('error'))
+        <p style="color: white;">{{ session('error') }}</p>
+        @endif
+        <form action="{{ route('login') }}" method="POST">
             @csrf
             <input type="email" name="email" placeholder="Email" required>
             <br>

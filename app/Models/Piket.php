@@ -6,20 +6,23 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
-class PresensiMasuk extends Model
+class Piket extends Model
 {
-    protected $table = 'presensi_masuk'; // Ganti dengan nama tabel Anda
+    protected $table = 'piket'; // Ganti dengan nama tabel Anda
     protected $primaryKey = 'id';
     protected $fillable = [
-        'tgl_masuk',
-        'jam_masuk',
+        'hari',
+        'id_pembimbing',
         'id_peserta',
-        'coordinat',
-        'alamat'
     ];
-    
+    public function pembimbing(): BelongsTo
+    {
+        return $this->belongsTo(Pembimbing::class, 'id_pembimbing', 'id');
+    }
+
     public function peserta(): BelongsTo
     {
         return $this->belongsTo(Peserta::class, 'id_peserta', 'id');
     }
+
 }

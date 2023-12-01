@@ -11,13 +11,14 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('keterangan', function (Blueprint $table) {
+        Schema::create('piket', function (Blueprint $table) {
             $table->id();
-            $table->unsignedBigInteger('id_peserta');
-            $table->string('keterangan');
-            $table->string('catatan')->nullable();
+            $table->string('hari')->nullable();
+            $table->unsignedBigInteger('id_pembimbing')->nullable();
+            $table->unsignedBigInteger('id_peserta')->nullable();
             $table->timestamps();
 
+            $table->foreign('id_pembimbing')->references('id')->on('pembimbing')->onDelete('cascade');
             $table->foreign('id_peserta')->references('id')->on('peserta')->onDelete('cascade');
         });
     }
@@ -27,6 +28,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('keterangan');
+        Schema::dropIfExists('piket');
     }
 };

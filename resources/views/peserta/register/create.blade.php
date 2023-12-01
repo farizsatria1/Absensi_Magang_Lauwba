@@ -31,6 +31,14 @@
                                     @enderror
                                 </div>
 
+                                <div class="form-group">
+                                    <label for="nama">Nama Panggilan</label>
+                                    <input type="text" name="nama_pgl" class="form-control" id="nama_pgl" placeholder="Masukkan Nama Panggilan" value="{{ old('nama_pgl') }}">
+                                    @error('nama_pgl')
+                                    <div class="text-danger">{{ $message }}</div>
+                                    @enderror
+                                </div>
+
                                 <!-- Asal Input -->
                                 <div class="form-group">
                                     <label for="asal">Asal</label>

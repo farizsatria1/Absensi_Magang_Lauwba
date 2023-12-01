@@ -5,6 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class Pekerjaan extends Model
 {
@@ -15,9 +16,9 @@ class Pekerjaan extends Model
         'id_peserta',
     ];
 
-    public function progress()
+    public function progress(): HasMany
     {
-        return $this->hasMany(Progress::class, 'id_pekerjaan');
+        return $this->hasMany(ProgressMagang::class, 'id_pekerjaan');
     }
     
     public function peserta(): BelongsTo

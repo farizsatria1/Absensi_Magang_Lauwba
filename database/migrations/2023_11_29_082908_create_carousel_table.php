@@ -11,8 +11,10 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::table('peserta', function (Blueprint $table) {
-            $table->softDeletes();
+        Schema::create('carousel', function (Blueprint $table) {
+            $table->id();
+            $table->string('image');
+            $table->timestamps();
         });
     }
 
@@ -21,8 +23,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::table('peserta', function (Blueprint $table) {
-            //
-        });
+        Schema::dropIfExists('carousel');
     }
 };

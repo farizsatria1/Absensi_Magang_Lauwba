@@ -3,16 +3,20 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
-use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Foundation\Auth\User as Authenticatable;
+use Illuminate\Notifications\Notifiable;
 
-class Admin extends Model
+class Admin extends Authenticatable
 {
-    protected $table = 'admin';
+    use HasFactory, Notifiable;
+
+    protected $table = 'admin'; // Ganti dengan nama tabel Anda
     protected $primaryKey = 'id';
     protected $fillable = [
         'email',
+        'password'
     ];
-
     protected $hidden = [
         'password',
     ];

@@ -15,10 +15,10 @@ return new class extends Migration
             $table->id();
             $table->unsignedBigInteger('id_pekerjaan')->nullable();
             $table->text('catatan');
-            $table->string('foto_dokumentasi')->nullable();
+            $table->string('foto_dokumentasi');
             $table->timestamps();
 
-            $table->foreign('id_pekerjaan')->references('id')->on('pekerjaan');
+            $table->foreign('id_pekerjaan')->references('id')->on('pekerjaan')->onDelete('cascade');
         });
     }
 

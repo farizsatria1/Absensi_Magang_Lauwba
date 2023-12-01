@@ -17,11 +17,11 @@
         <div class="container-fluid">
             <div class="row">
                 <div class="col-md-8 offset-md-2">
-                    <div class="card card-primary"> 
+                    <div class="card card-primary">
                         <!-- /.card-header -->
                         <div class="card-body p-3">
                             <form action="{{ route('pembimbing.store') }}" method="post">
-                            @csrf
+                                @csrf
                                 <!-- Nama Input -->
                                 <div class="form-group">
                                     <label for="nama">Nama</label>
@@ -49,7 +49,7 @@
                                     @enderror
                                 </div>
 
-                                <button type="submit" class="btn btn-primary mt-3">Simpan</button>
+                                <button type="submit" class="btn btn-primary mt-3" >Simpan</button>
                             </form>
                         </div>
                         <!-- /.card-body -->

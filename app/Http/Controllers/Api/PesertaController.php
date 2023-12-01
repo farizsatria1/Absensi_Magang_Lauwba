@@ -20,72 +20,35 @@ class PesertaController extends Controller
         return response()->json(['peserta' => $pesertaNama], 200);
     }
 
-    public function daftar(Request $request)
-    {
-        try {
-            $validatedData = $request->validate([
-                'nama' => 'required|string|max:255',
-                'asal' => 'required|string|max:255',
-                'no_hp' => 'required|string|max:255',
-                'asal_sekolah' => 'required|string|max:255',
-                'username' => 'required|string|max:255|unique:peserta',
-                'password' => 'required|string|min:8',
-                'tgl_mulai' => 'required|string',
-                'id_pembimbing' => 'required|exists:pembimbing,id' // Validate that the id_pembimbing exists in the 'pembimbing' table
-            ]);
-
-            $peserta = Peserta::create([
-                'nama' => $request->nama,
-                'asal' => $request->asal,
-                'no_hp' => $request->no_hp,
-                'asal_sekolah' => $request->asal_sekolah,
-                'username' => $request->username,
-                'password' => Hash::make($request->password),
-                'tgl_mulai' => $request->tgl_mulai,
-                'id_pembimbing' => $request->id_pembimbing // Assign the id_pembimbing here
-            ]);
-
-            $token = $peserta->createToken('pesertaToken')->plainTextToken;
-
-            return response()->json(['message' => 'Registrasi berhasil', 'token' => $token], 201);
-        } catch (\Exception $e) {
-            return response()->json(['message' => $e->getMessage()], 500);
-        }
-    }
-
-
     public function login(Request $request)
     {
-        if (!Auth::attempt($request->only('username', 'password'))) {
-            return response()->json(['message' => 'Unauthorized'], 401);
-        }
-
-        $peserta = Peserta::where('username', $request['username'])->firstOrFail();
-
-        $token = $peserta->createToken('pesertaToken')->plainTextToken;
-        $peserta->token = $token;
-        $peserta->token_type = 'Bearer';
-        $peserta->pembimbing;
-
-        return response()->json([
-            'success' => true,
-            'message' => 'Hi ' . $peserta->nama . ', selamat datang di sistem presensi',
-            'data' => [
-                'peserta' => $peserta,
-            ]
-        ]);
-    }
-
-
-    public function logout(Request $request)
-    {
         try {
-            $request->user()->currentAccessToken()->delete();
+            // Validasi input
+            $validatedData = $request->validate([
+                'username' => 'required|string',
+                'password' => 'required|string',
+            ]);
 
-            return response()->json(['message' => 'Logout berhasil'], 200);
+            // Ambil data pengguna dari database
+            $peserta = Peserta::where('username', $validatedData['username'])->first();
+            $peserta->pembimbing;
+
+            // Periksa keberadaan pengguna dan cocokkan kata sandi
+            if ($peserta && Hash::check($validatedData['password'], $peserta->password)) {
+                return response()->json([
+                    'success' => true,
+                    'message' => 'Hi ' . $peserta->nama . ', selamat datang di sistem presensi',
+                    'data' => [
+                        'peserta' => $peserta,
+                    ]
+                ]);
+            }
         } catch (\Exception $e) {
             return response()->json(['message' => $e->getMessage()], 500);
         }
+
+        // Jika tidak berhasil login
+        return response()->json(['message' => 'Login failed'], 401);
     }
 
     public function checkUsername(Request $request)
@@ -105,9 +68,33 @@ class PesertaController extends Controller
         return response()->json($peserta);
     }
 
-    public function update(Request $request, Peserta $peserta)
+    public function update(Request $request, $id)
     {
-        $peserta->update($request->all());
-        return response()->json($peserta, 200);
+        try {
+            // Validate input
+            $validatedData = $request->validate([
+                'password' => 'required|string|min:8',
+            ]);
+
+            // Find the Peserta by ID
+            $peserta = Peserta::find($id);
+
+            // Check if the Peserta exists
+            if (!$peserta) {
+                return response()->json(['message' => 'Peserta not found'], 404);
+            }
+
+            // Update the password
+            $peserta->password = Hash::make($validatedData['password']);
+            $peserta->save();
+
+            return response()->json(['message' => 'Password updated successfully'], 200);
+        } catch (\Illuminate\Validation\ValidationException $e) {
+            // Handle validation errors
+            return response()->json(['message' => $e->getMessage()], 422);
+        } catch (\Exception $e) {
+            // Handle other exceptions
+            return response()->json(['message' => $e->getMessage()], 500);
+        }
     }
 }
