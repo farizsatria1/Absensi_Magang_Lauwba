@@ -13,4 +13,12 @@ class PiketController extends Controller
         $piket = Piket::with('pembimbing', 'peserta')->get();
         return response()->json($piket);
     }
+
+    public function piketPeserta(Request $request, $id_peserta)
+    {
+        // Assuming you have a Piket model with a relationship to Peserta model
+        $piket = Piket::with('peserta')->where('id_peserta', $id_peserta)->first();
+
+        return response()->json($piket);
+    }
 }

@@ -16,6 +16,7 @@ return new class extends Migration
             $table->string('nip')->unique();
             $table->string('nama');
             $table->string('password');
+            $table->string('ttd');
             $table->timestamps();
         });
     }

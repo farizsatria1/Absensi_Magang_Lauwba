@@ -16,6 +16,8 @@ return new class extends Migration
             $table->unsignedBigInteger('id_pekerjaan')->nullable();
             $table->text('catatan');
             $table->string('foto_dokumentasi');
+            $table->string('trainer');
+            $table->enum('status',['0','1'])->default('0');
             $table->timestamps();
 
             $table->foreign('id_pekerjaan')->references('id')->on('pekerjaan')->onDelete('cascade');

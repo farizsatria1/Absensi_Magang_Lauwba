@@ -19,6 +19,7 @@ return new class extends Migration
             $table->string('nama_pgl');
             $table->unsignedBigInteger('id_pembimbing')->nullable();
             $table->string('asal_sekolah')->nullable();
+            $table->string('ttd');
             $table->string('username')->unique();
             $table->string('password');
             $table->timestamps();

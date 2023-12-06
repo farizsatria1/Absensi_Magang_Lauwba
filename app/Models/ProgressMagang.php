@@ -13,7 +13,8 @@ class ProgressMagang extends Model
     protected $fillable = [
         'catatan',
         'id_pekerjaan',
-        'foto_dokumentasi'
+        'foto_dokumentasi',
+        'trainer'
     ];
     
     public function pekerjaan(): BelongsTo

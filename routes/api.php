@@ -9,6 +9,7 @@ use App\Http\Controllers\Api\PresensiMasukController;
 use App\Http\Controllers\Api\PresensiPulangController;
 use App\Http\Controllers\Api\ProgressController;
 use App\Http\Controllers\Api\PiketController;
+use App\Http\Controllers\Api\TrainerController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -21,7 +22,6 @@ Route::get('/pembimbing/{id}', [PembimbingController::class, 'getPembimbing']);
 Route::get('/peserta/{id_pembimbing}', [PesertaController::class, 'index']);
 Route::post('/login-peserta',[PesertaController::class,'login']);
 Route::get('/peserta',[PesertaController::class,'peserta']);
-Route::get('/check-username', [PesertaController::class, 'checkUsername']);
 Route::put('/peserta/{id}/update-password', [PesertaController::class, 'update']);
 
 //API presensi masuk
@@ -41,6 +41,8 @@ Route::get('/judul', [PekerjaanController::class, 'index']);
 Route::post('/tambah-progress', [ProgressController::class, 'tambahProgress']);
 Route::get('/progress/{id_peserta}', [ProgressController::class, 'index']);
 Route::get('/allProgress/{id_pembimbing}', [ProgressController::class, 'allProgress']);
+Route::put('/progress/{id}/update-status', [ProgressController::class, 'updateStatus']);
+
 
 //API Keterangan
 Route::post('/keterangan', [KeteranganController::class, 'store']);
@@ -51,4 +53,8 @@ Route::get('/carousel', [CarouselController::class, 'index']);
 
 //API Piket
 Route::get('/piket', [PiketController::class, 'piket']);
+Route::get('/piket/{id_peserta}', [PiketController::class, 'piketPeserta']);
+
+//API Trainer
+Route::get('/trainer', [TrainerController::class, 'tambahProgress']);
 

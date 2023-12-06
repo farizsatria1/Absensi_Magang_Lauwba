@@ -51,20 +51,9 @@ class PesertaController extends Controller
         return response()->json(['message' => 'Login failed'], 401);
     }
 
-    public function checkUsername(Request $request)
-    {
-        $username = $request->query('username');
-        $user = Peserta::where('username', $username)->first();
-        if ($user) {
-            return response()->json(['exists' => true]);
-        } else {
-            return response()->json(['exists' => false]);
-        }
-    }
-
     public function peserta()
     {
-        $peserta = Peserta::with('pembimbing:id,nama')->get();
+        $peserta = Peserta::with('pembimbing:id,nama,nip')->get();
         return response()->json($peserta);
     }
 

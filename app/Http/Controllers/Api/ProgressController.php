@@ -45,6 +45,7 @@ class ProgressController extends Controller
             $data = $request->validate([
                 'catatan' => 'required',
                 'id_pekerjaan' => 'required|exists:pekerjaan,id',
+                'trainer' => 'required', // Tambahkan validasi untuk selected_trainer
                 'foto_dokumentasi' => 'image|max:2048',
             ]);
 
@@ -65,9 +66,30 @@ class ProgressController extends Controller
                 'catatan' => $data['catatan'],
                 'id_pekerjaan' => $pekerjaan->id, // Gunakan id_pekerjaan dari model Pekerjaan
                 'foto_dokumentasi' => $imageUrl, // simpan URL gambar di database
+                'trainer' => $data['trainer'], // Tambahkan selected_trainer ke dalam database
             ]);
 
             return response()->json(['message' => 'Data progress magang berhasil ditambahkan.'], 201);
+        } catch (\Exception $e) {
+            return response()->json(['message' => $e->getMessage()], 500);
+        }
+    }
+
+    public function updateStatus(Request $request, $id)
+    {
+        try {
+            $data = $request->validate([
+                'status' => 'required|in:0,1', // Status harus 0 atau 1
+            ]);
+
+            // Temukan progress magang berdasarkan ID
+            $progress = ProgressMagang::findOrFail($id);
+
+            // Perbarui status
+            $progress->status = $data['status'];
+            $progress->save();
+
+            return response()->json(['message' => 'Status progress magang berhasil diperbarui.'], 200);
         } catch (\Exception $e) {
             return response()->json(['message' => $e->getMessage()], 500);
         }
