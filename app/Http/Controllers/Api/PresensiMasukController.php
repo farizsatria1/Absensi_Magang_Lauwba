@@ -59,7 +59,7 @@ class PresensiMasukController extends Controller
     public function index(Request $request, $id_Pembimbing)
     {
         $masuk = PresensiMasuk::with(['peserta' => function ($query) {
-            $query->select('id', 'nama', 'nama_pgl', 'id_pembimbing');
+            $query->select('id', 'nama', 'nama_pgl','status', 'id_pembimbing');
         }])
             ->whereHas('peserta', function ($query) use ($id_Pembimbing) {
                 $query->where('id_pembimbing', $id_Pembimbing);

@@ -20,10 +20,12 @@
                     <div class="card card-primary">
                         <!-- /.card-header -->
                         <div class="card-body p-3">
-                            <form action="{{ route('piket.update' ,$piket->id) }}" method="post">
+                            <form action="{{ route('piket.update', $piket->id) }}" method="post">
                                 @csrf
                                 @method('PUT')
-                                <!-- Nama Pembimbing -->
+
+                                <!-- Nama Pembimbing or Nama Peserta based on the condition -->
+                                @if($piket->id_pembimbing)
                                 <div class="mb-3">
                                     <label class="form-label">Pembimbing</label><br>
                                     <select class="form-select" name="id_pembimbing">
@@ -39,7 +41,7 @@
                                     @enderror
                                 </div>
 
-                                <!-- Nama Peserta -->
+                                @else
                                 <div class="mb-3">
                                     <label class="form-label">Peserta</label><br>
                                     <select class="form-select" name="id_peserta">
@@ -54,6 +56,7 @@
                                     <div class="text-danger">{{ $message }}</div>
                                     @enderror
                                 </div>
+                                @endif
 
                                 <!-- Hari Piket -->
                                 <div class="mb-3">
@@ -70,6 +73,7 @@
                                     <div class="text-danger">{{ $message }}</div>
                                     @enderror
                                 </div>
+
                                 <button type="submit" class="btn btn-primary mt-3">Simpan</button>
                             </form>
                         </div>

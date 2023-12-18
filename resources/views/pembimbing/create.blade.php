@@ -20,7 +20,7 @@
                     <div class="card card-primary">
                         <!-- /.card-header -->
                         <div class="card-body p-3">
-                            <form action="{{ route('pembimbing.store') }}" method="post">
+                            <form action="{{ route('pembimbing.store') }}" method="post" enctype="multipart/form-data">
                                 @csrf
                                 <!-- Nama Input -->
                                 <div class="form-group">
@@ -49,7 +49,18 @@
                                     @enderror
                                 </div>
 
-                                <button type="submit" class="btn btn-primary mt-3" >Simpan</button>
+                                <div class="mb-3">
+                                    <label for="password">Masukkan TTD</label>
+                                    <input type="file" class="form-control 
+                                    @error('ttd') 
+                                        is-invalid
+                                    @enderror" name="ttd">
+                                    @error('ttd')
+                                    <span class="invalid-feedback">{{$message}}</span>
+                                    @enderror
+                                </div>
+
+                                <button type="submit" class="btn btn-primary mt-3">Simpan</button>
                             </form>
                         </div>
                         <!-- /.card-body -->

@@ -23,6 +23,18 @@
                             <div class="col">
                                 <a href="{{ route('piket.create') }}" class="btn btn-primary">Tambah Jadwal Piket</a>
                             </div>
+
+                            <div class="col-sm-3 text-right"> <!-- Ubah ukuran kolom agar sesuai dengan tampilan -->
+                                <form action="{{ route('piket.index') }}" method="GET">
+                                    <div class="input-group">
+                                        <input type="text" name="search" class="form-control" placeholder="Cari..." value="{{ request('search') }}">
+                                        <button type="submit" class="btn btn-warning ml-2">
+                                            <i class="fas fa-search" style="color: #ffffff;"></i> <!-- Menggunakan ikon cari dari Font Awesome -->
+                                        </button>
+                                    </div>
+                                </form>
+                            </div>
+                            
                         </div>
 
                         <div class="table-responsive">

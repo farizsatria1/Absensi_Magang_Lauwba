@@ -20,7 +20,7 @@
                     <div class="card card-primary">
                         <!-- /.card-header -->
                         <div class="card-body p-3">
-                            <form action="{{ route('peserta.update', ['id' => $peserta->id]) }}" method="post">
+                            <form action="{{ route('peserta.update', ['id' => $peserta->id]) }}" method="post" , enctype="multipart/form-data">
                                 @csrf
                                 @method('PUT')
 
@@ -85,22 +85,6 @@
                                     @enderror
                                 </div>
 
-                                <!-- Hari Piket -->
-                                <div class="mb-3">
-                                    <label class="form-label">Hari Piket</label><br>
-                                    <select class="form-select" name="piket">
-                                        <option value="">--Pilih Hari Piket--</option>
-                                        @foreach (['Senin', 'Selasa', 'Rabu', 'Kamis', 'Jumat'] as $hari)
-                                        <option value="{{ $hari }}" {{ old('piket', $peserta->piket) == $hari ? 'selected' : '' }}>
-                                            {{ $hari }}
-                                        </option>
-                                        @endforeach
-                                    </select>
-                                    @error('piket')
-                                    <div class="text-danger">{{ $message }}</div>
-                                    @enderror
-                                </div>
-
                                 <!-- Username Input -->
                                 <div class="form-group">
                                     <label for="username">Username</label>
@@ -117,6 +101,32 @@
                                     @error('password')
                                     <div class="text-danger">{{ $message }}</div>
                                     @enderror
+                                </div>
+
+                                <div class="mb-3">
+                                    <label class="form-label">Status</label><br>
+                                    <select class="form-select" name="status">
+                                        <option value="">--Pilih Status Peserta--</option>
+                                        @foreach (['aktif', 'non-aktif'] as $status)
+                                        <option value="{{ $status }}" {{ old('status', $peserta->status) == $status ? 'selected' : '' }}>
+                                            {{ $status }}
+                                        </option>
+                                        @endforeach
+                                    </select>
+                                    @error('status')
+                                    <div class="text-danger">{{ $message }}</div>
+                                    @enderror
+                                </div>
+
+                                <div class="form-group mb-3">
+                                    <label class="form-label" for="ttd">TTD</label>
+                                    <input type="file" class="form-control-file" id="ttd" name="ttd" onchange="previewImage(event, 'preview')">
+                                    <br>
+                                    @if ($peserta->ttd)
+                                    <img id="preview" src="{{ Storage::url('public/images/' . $peserta->ttd) }}" alt="{{ $peserta->ttd }}" class="img-thumbnail" width="200" style="margin-bottom: 0.5rem;">
+                                    @else
+                                    <p class="text-muted">Gambar tidak tersedia.</p>
+                                    @endif
                                 </div>
 
                                 <button type="submit" class="btn btn-primary mt-3">Simpan</button>

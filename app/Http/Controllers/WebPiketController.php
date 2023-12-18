@@ -12,18 +12,33 @@ class WebPiketController extends Controller
 {
     public function index(Request $request)
     {
-        if ($request->filter == 'pembimbing') {
-            $piket = Piket::whereNotNull('id_pembimbing')->latest()->paginate(10);
-        } elseif ($request->filter == 'peserta') {
-            $piket = Piket::whereNotNull('id_peserta')->latest()->paginate(10);
+        $search = $request->search;
+        $filter = $request->filter;
+
+        if ($filter == 'pembimbing') {
+            $piket = Piket::whereNotNull('id_pembimbing')->with('pembimbing');
+        } elseif ($filter == 'peserta') {
+            $piket = Piket::whereNotNull('id_peserta')->with('peserta');
         } else {
-            $piket = Piket::latest()->paginate(10);
+            $piket = new Piket;
         }
+
+        if ($search) {
+            // Assuming 'nama' is a field in the related models (Pembimbing or Peserta)
+            $piket = $piket->whereHas('pembimbing', function ($query) use ($search) {
+                $query->where('nama', 'like', "%{$search}%");
+            })->orWhereHas('peserta', function ($query) use ($search) {
+                $query->where('nama', 'like', "%{$search}%");
+            });
+        }
+
+        $piket = $piket->latest()->paginate(10);
 
         return view('piket.piket', [
             'piket' => $piket,
         ]);
     }
+
 
 
     public function create()

@@ -15,6 +15,30 @@ class WebProgressController extends Controller
         return view('peserta.progress.progress', ['progress' => $progress]);
     }
 
+    public function cetakProgressAll(Request $request, $id_peserta)
+    {
+        $progress = ProgressMagang::whereHas('pekerjaan', function ($query) use ($id_peserta) {
+            $query->where('id_peserta', $id_peserta);
+        })->with(['peserta', 'pembimbing'])->get();
+
+        return view('cetak.cetak_progress', ['progress' => $progress]);
+    }
+
+    public function cetakProgressBulanan(Request $request, $id_peserta)
+    {
+        $bulan = $request->input('bulan'); // misalnya kita ingin data dari bulan tertentu
+
+        $progress = ProgressMagang::whereHas('pekerjaan', function ($query) use ($id_peserta) {
+            $query->where('id_peserta', $id_peserta);
+        })->whereMonth('created_at', $bulan)->with(['peserta', 'pembimbing'])->get();
+
+        if ($progress->isEmpty()) {
+            return abort(404);
+        }
+
+        return view('cetak.cetak_progress', ['progress' => $progress]);
+    }
+
     public function filter(Request $request)
     {
         // Ambil peserta yang dipilih dari permintaan

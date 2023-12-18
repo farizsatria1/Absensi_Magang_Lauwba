@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
 use App\Models\Pekerjaan;
+use App\Models\Pembimbing;
 use App\Models\Peserta;
 use App\Models\ProgressMagang;
 use Illuminate\Http\Request;
@@ -13,11 +14,43 @@ class ProgressController extends Controller
 {
     public function index($id_peserta)
     {
-        $progress = ProgressMagang::with(['pekerjaan' => function ($query) use ($id_peserta) {
-            $query->where('id_peserta', $id_peserta)->select('id', 'id_peserta', 'judul');
-        }])->get();
+        $progress = ProgressMagang::with([
+            'pekerjaan' => function ($query) use ($id_peserta) {
+                $query->where('id_peserta', $id_peserta)->select('id', 'id_peserta', 'judul');
+            },
+            'pembimbing' => function ($query) {
+                $query->select('id', 'nama'); // asumsikan 'nama' adalah kolom untuk nama pembimbing
+            },
+            'peserta' => function ($query) {
+                $query->select('id', 'nama'); // asumsikan 'nama' adalah kolom untuk nama peserta
+            }
+        ])->get();
 
         return response()->json($progress);
+    }
+
+    public function progress()
+    {
+        $progressMagang = ProgressMagang::with(['pekerjaan' => function ($query) {
+            $query->with('peserta:id,nama');
+        }])
+            ->with('pembimbing:id,nama')
+            ->with('peserta:id,nama')
+            ->get();
+
+        return response()->json($progressMagang);
+    }
+
+    public function progressByPeserta($id_peserta)
+    {
+        $progressMagang = ProgressMagang::with(['pekerjaan' => function ($query) use ($id_peserta) {
+            $query->where('id_peserta', $id_peserta)->select('id', 'id_peserta', 'judul');
+        }])
+            ->with('pembimbing:id,nama')
+            ->with('peserta:id,nama')
+            ->get();
+
+        return response()->json($progressMagang);
     }
 
     public function allProgress(Request $request, $id_pembimbing)
@@ -43,14 +76,23 @@ class ProgressController extends Controller
     {
         try {
             $data = $request->validate([
-                'catatan' => 'required',
                 'id_pekerjaan' => 'required|exists:pekerjaan,id',
-                'trainer' => 'required', // Tambahkan validasi untuk selected_trainer
+                'catatan' => 'required',
+                'trainer_pembimbing' => 'nullable|exists:pembimbing,id',
+                'trainer_peserta' => 'nullable|exists:peserta,id',
                 'foto_dokumentasi' => 'image|max:2048',
             ]);
 
             // Ambil id_pekerjaan dari tabel pekerjaan
             $pekerjaan = Pekerjaan::findOrFail($data['id_pekerjaan']);
+            $pembimbing = null;
+            if ($data['trainer_pembimbing'] != null) {
+                $pembimbing = Pembimbing::findOrFail($data['trainer_pembimbing']);
+            }
+            $peserta = null;
+            if ($data['trainer_peserta'] != null) {
+                $peserta = Peserta::findOrFail($data['trainer_peserta']);
+            }
 
             if ($request->hasFile('foto_dokumentasi')) {
                 $image = $request->file('foto_dokumentasi');
@@ -63,10 +105,11 @@ class ProgressController extends Controller
             }
 
             $progress = ProgressMagang::create([
-                'catatan' => $data['catatan'],
                 'id_pekerjaan' => $pekerjaan->id, // Gunakan id_pekerjaan dari model Pekerjaan
+                'catatan' => $data['catatan'],
+                'trainer_pembimbing' => $pembimbing != null ? $pembimbing->id : null, // Gunakan id_pekerjaan dari model Pekerjaan
+                'trainer_peserta' => $peserta != null ? $peserta->id : null, // Gunakan id_pekerjaan dari model Pekerjaan
                 'foto_dokumentasi' => $imageUrl, // simpan URL gambar di database
-                'trainer' => $data['trainer'], // Tambahkan selected_trainer ke dalam database
             ]);
 
             return response()->json(['message' => 'Data progress magang berhasil ditambahkan.'], 201);
@@ -87,6 +130,26 @@ class ProgressController extends Controller
 
             // Perbarui status
             $progress->status = $data['status'];
+            $progress->save();
+
+            return response()->json(['message' => 'Status progress magang berhasil diperbarui.'], 200);
+        } catch (\Exception $e) {
+            return response()->json(['message' => $e->getMessage()], 500);
+        }
+    }
+
+    public function updatePesertaApprove(Request $request, $id)
+    {
+        try {
+            $data = $request->validate([
+                'peserta_approve' => 'required|in:0,1', // Status harus 0 atau 1
+            ]);
+
+            // Temukan progress magang berdasarkan ID
+            $progress = ProgressMagang::findOrFail($id);
+
+            // Perbarui peserta_approve
+            $progress->peserta_approve = $data['peserta_approve'];
             $progress->save();
 
             return response()->json(['message' => 'Status progress magang berhasil diperbarui.'], 200);

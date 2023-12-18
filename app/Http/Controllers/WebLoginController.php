@@ -6,6 +6,7 @@ use App\Models\Admin;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Redirect;
+use RealRashid\SweetAlert\Facades\Alert;
 
 class WebLoginController extends Controller
 {
@@ -21,6 +22,7 @@ class WebLoginController extends Controller
 
         if (Auth::attempt($credentials)) {
             // Jika login berhasil, redirect ke halaman yang diinginkan
+            Alert::success('Berhasil', 'Anda Berhasil Login');
             return redirect()->intended('/peserta');
         }
 

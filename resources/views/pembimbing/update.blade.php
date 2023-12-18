@@ -17,10 +17,10 @@
         <div class="container-fluid">
             <div class="row">
                 <div class="col-md-8 offset-md-2">
-                    <div class="card card-primary"> 
+                    <div class="card card-primary">
                         <!-- /.card-header -->
                         <div class="card-body p-3">
-                            <form action="{{ route('pembimbing.update', ['id' => $pembimbing->id]) }}" method="post">
+                            <form action="{{ route('pembimbing.update', ['id' => $pembimbing->id]) }}" method="post" , enctype="multipart/form-data">
                                 @csrf
                                 @method('PUT') <!-- Use the PUT method for updates -->
 
@@ -50,6 +50,18 @@
                                     <div class="text-danger">{{ $message }}</div>
                                     @enderror
                                 </div>
+
+                                <div class="form-group mb-3">
+                                    <label class="form-label" for="ttd">TTD</label>
+                                    <input type="file" class="form-control-file" id="ttd" name="ttd" onchange="previewImage(event, 'preview')">
+                                    <br>
+                                    @if ($pembimbing->ttd)
+                                    <img id="preview" src="{{ Storage::url('public/images/' . $pembimbing->ttd) }}" alt="{{ $pembimbing->ttd }}" class="img-thumbnail" width="200" style="margin-bottom: 0.5rem;">
+                                    @else
+                                    <p class="text-muted">Gambar tidak tersedia.</p>
+                                    @endif
+                                </div>
+
 
                                 <button type="submit" class="btn btn-primary mt-3">Simpan</button>
                             </form>

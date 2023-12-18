@@ -6,6 +6,7 @@ use App\Http\Controllers\WebLoginController;
 use App\Http\Controllers\WebPembimbingController;
 use App\Http\Controllers\WebPesertaController;
 use App\Http\Controllers\WebPiketController;
+use App\Http\Controllers\WebPresensiController;
 use App\Http\Controllers\WebProgressController;
 use Illuminate\Support\Facades\Route;
 
@@ -34,7 +35,7 @@ Route::middleware(['auth'])->group(function () {
 
     //Keterangan Izin Peserta
     Route::get('/keterangan', [WebKeteranganController::class, 'index'])->name('keterangan.index');
-    Route::get('/keterangan/filter', [WebKeteranganController::class, 'filter'])->name('keterangan.filter');
+    Route::get('/keterangan/fil', [WebKeteranganController::class, 'filter'])->name('keterangan.filter');
 
     //Progress Peserta
     Route::get('/progress', [WebProgressController::class, 'index'])->name('progress.index');
@@ -70,3 +71,8 @@ Route::get('/', function () {
 });
 Route::get('/login', [WebLoginController::class, 'showlogin'])->name('login');
 Route::post('/login', [WebLoginController::class, 'login']);
+
+Route::get('/cetak-progress/{id_peserta}', [WebProgressController::class, 'cetakProgressAll']);
+Route::get('/cetak-progress/bulanan/{id_peserta}', [WebProgressController::class, 'cetakProgressBulanan']);
+
+Route::get('/cetak-presensi/{id_peserta}', [WebPresensiController::class, 'index']);

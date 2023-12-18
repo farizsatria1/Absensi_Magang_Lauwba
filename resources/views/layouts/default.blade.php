@@ -116,7 +116,7 @@
                         </li>
 
                         <li class="nav-item">
-                            <a href="/keterangan/filter" class="nav-link">
+                            <a href="/keterangan/fil" class="nav-link">
                                 <i class="nav-icon fas fa-clipboard"></i> <!-- Mengganti ikon -->
                                 <p>
                                     Keterangan Izin
@@ -236,6 +236,21 @@
             $('#participant').select2();
         });
     </script>
+    <script>
+        $(document).ready(function() {
+            // Get the current URL path
+            var path = window.location.pathname.split("/").pop();
+
+            // Add active class to the corresponding menu item
+            $('.nav-sidebar .nav-item').each(function() {
+                var menuItem = $(this).find('a').attr('href').split("/").pop();
+                if (menuItem === path) {
+                    $(this).addClass('active');
+                }
+            });
+        });
+    </script>
+
 </body>
 @include('layouts.sweet')
 

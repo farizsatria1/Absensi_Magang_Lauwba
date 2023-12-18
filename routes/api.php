@@ -40,8 +40,11 @@ Route::get('/judul', [PekerjaanController::class, 'index']);
 //API Progress
 Route::post('/tambah-progress', [ProgressController::class, 'tambahProgress']);
 Route::get('/progress/{id_peserta}', [ProgressController::class, 'index']);
+Route::get('/progress', [ProgressController::class, 'progress']);
+Route::get('/progress-magang/{id_peserta}', [ProgressController::class, 'progressByPeserta']);
 Route::get('/allProgress/{id_pembimbing}', [ProgressController::class, 'allProgress']);
 Route::put('/progress/{id}/update-status', [ProgressController::class, 'updateStatus']);
+Route::put('/progress/{id}/update-approve', [ProgressController::class, 'updatePesertaApprove']);
 
 
 //API Keterangan
@@ -54,7 +57,4 @@ Route::get('/carousel', [CarouselController::class, 'index']);
 //API Piket
 Route::get('/piket', [PiketController::class, 'piket']);
 Route::get('/piket/{id_peserta}', [PiketController::class, 'piketPeserta']);
-
-//API Trainer
-Route::get('/trainer', [TrainerController::class, 'tambahProgress']);
 

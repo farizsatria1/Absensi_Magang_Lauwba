@@ -41,6 +41,7 @@
                                         <th>No</th>
                                         <th>Nama</th>
                                         <th>Nip</th>
+                                        <th>TTD</th>
                                         <th>Aksi</th>
                                     </tr>
                                 </thead>
@@ -50,6 +51,13 @@
                                         <td class="align-middle">{{ $index + 1 }}</td>
                                         <td class="align-middle">{{ $item->nama }}</td>
                                         <td class="align-middle">{{ $item->nip }}</td>
+                                        <td style="text-align: center;">
+                                            @if ($item->ttd)
+                                            <img src="{{ Storage::url('public/images/' . $item->ttd) }}" alt="Gambar tidak tersedia" width="100" style="display: block; margin: 0 auto;">
+                                            @else
+                                            Gambar tidak tersedia
+                                            @endif
+                                        </td>
                                         <td class="align-middle" style="text-align: center;">
                                             <a href="{{ route('pembimbing.edit', $item->id) }}" class="btn btn-warning">
                                                 <i class="fas fa-edit"></i> <!-- Edit icon -->

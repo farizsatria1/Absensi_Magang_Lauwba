@@ -20,7 +20,7 @@
                     <div class="card card-primary">
                         <!-- /.card-header -->
                         <div class="card-body p-3">
-                            <form action="{{ route('peserta.store') }}" method="post">
+                            <form action="{{ route('peserta.store') }}" method="post" , enctype="multipart/form-data">
                                 @csrf
                                 <!-- Nama Input -->
                                 <div class="form-group">
@@ -95,6 +95,29 @@
                                     <input type="password" name="password" class="form-control" id="password" placeholder="Masukkan Password" value="{{ old('password') }}">
                                     @error('password')
                                     <div class="text-danger">{{ $message }}</div>
+                                    @enderror
+                                </div>
+
+                                <div class="mb-3">
+                                    <label class="form-label">Status</label><br>
+                                    <select class="form-select" name="status">
+                                        <option value="">--Pilih Status Peserta--</option>
+                                        <option value="aktif">aktif</option>
+                                        <option value="non-aktif">non-aktif</option>
+                                    </select>
+                                    @error('status')
+                                    <div class="text-danger">{{ $message }}</div>
+                                    @enderror
+                                </div>
+
+                                <div class="mb-3">
+                                    <label class="form-label">Masukan TTD</label>
+                                    <input type="file" class="form-control 
+                                    @error('ttd') 
+                                        is-invalid
+                                    @enderror" name="ttd">
+                                    @error('ttd')
+                                    <span class="invalid-feedback">{{$message}}</span>
                                     @enderror
                                 </div>
 

@@ -14,6 +14,7 @@ class Pembimbing extends Model
         'nip',
         'nama',
         'password',
+        'ttd'
     ];
 
     protected $hidden = [

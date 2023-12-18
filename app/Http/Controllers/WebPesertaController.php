@@ -7,6 +7,7 @@ use App\Models\Pembimbing;
 use App\Models\Peserta;
 use App\Models\ProgressMagang;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Storage;
 use RealRashid\SweetAlert\Facades\Alert;
 
 class WebPesertaController extends Controller
@@ -46,6 +47,13 @@ class WebPesertaController extends Controller
             'tgl_mulai' => ['required'],
             'username' => ['required', 'unique:peserta'], // Ensure the username is unique
             'password' => ['required'],
+            'status' => ['required'],
+            'ttd' => ['required', 'image', 'mimes:jpeg,png,jpg,gif', 'max:2048'],
+        ], [
+            'ttd.required' => 'Kolom gambar harus di isi',
+            'ttd.image' => 'File yang diunggah harus berupa gambar',
+            'ttd.mimes' => 'Format gambar harus jpeg, png, jpg, atau gif',
+            'ttd.max' => 'Ukuran gambar tidak boleh lebih dari 2MB',
         ]);
 
         // Create a new instance of YourModel with the validated data
@@ -58,6 +66,16 @@ class WebPesertaController extends Controller
         $peserta->tgl_mulai = $request->tgl_mulai;
         $peserta->username = $request->username;
         $peserta->password = bcrypt($request->password); // Hash the password
+        $peserta->status = $request->status;
+
+        if ($request->hasFile('ttd')) {
+            $ttd = $request->file('ttd');
+            $ttdName = time() . '.' . $ttd->getClientOriginalExtension();
+            $ttdPath = $ttd->storeAs('public/images', $ttdName);
+
+            // Save the image filename to the database
+            $peserta->ttd = $ttdName;
+        }
 
         // Try to save the model to the database
         if ($peserta->save()) {
@@ -71,11 +89,15 @@ class WebPesertaController extends Controller
         }
     }
 
-
     public function destroy(Request $request, $id)
     {
         // Find the Peserta by ID
         $peserta = Peserta::findOrFail($id);
+
+        if (Storage::disk('public')->exists('images/' . $peserta->ttd)) {
+            // Hapus gambar dari penyimpanan jika ada
+            Storage::disk('public')->delete('images/' . $peserta->ttd);
+        }
         $peserta->delete();
         // Redirect back or to a specific route
         Alert::success('Success', 'Akun Peserta berhasil di Hapus');
@@ -101,6 +123,12 @@ class WebPesertaController extends Controller
             'id_pembimbing' => ['required'],
             'tgl_mulai' => ['required'],
             'username' => ['required'],
+            'status' => ['required'],
+            'ttd' => ['sometimes', 'image', 'mimes:jpeg,png,jpg,gif', 'max:2048'],
+        ], [
+            'ttd.image' => 'File yang diunggah harus berupa gambar',
+            'ttd.mimes' => 'Format gambar harus jpeg, png, jpg, atau gif',
+            'ttd.max' => 'Ukuran gambar tidak boleh lebih dari 2MB',
         ]);
 
         // Find the Peserta by ID
@@ -114,6 +142,7 @@ class WebPesertaController extends Controller
         $peserta->id_pembimbing = $request->id_pembimbing;
         $peserta->tgl_mulai = $request->tgl_mulai;
         $peserta->username = $request->username;
+        $peserta->status = $request->status;
 
         // Check if a new password is provided and update it
         if ($request->has('password')) {
@@ -122,6 +151,24 @@ class WebPesertaController extends Controller
             ]);
 
             $peserta->password = bcrypt($request->password); // Hash the new password
+        }
+
+        // Check if a new image is provided and update it
+        if ($request->hasFile('ttd')) {
+            $this->validate($request, [
+                'ttd' => ['image', 'mimes:jpeg,png,jpg,gif', 'max:2048'],
+            ]);
+
+            // Delete the old image
+            Storage::delete('public/images/' . $peserta->ttd);
+
+            // Store the new image
+            $image = $request->file('ttd');
+            $imageName = time() . '.' . $image->getClientOriginalExtension();
+            $imagePath = $image->storeAs('public/images', $imageName);
+
+            // Save the image filename to the database
+            $peserta->ttd = $imageName;
         }
 
         // Save the updated model to the database

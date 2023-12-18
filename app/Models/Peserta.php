@@ -18,7 +18,9 @@ class Peserta extends Model
         'asal_sekolah',
         'no_hp',
         'tgl_mulai',
-        'id_pembimbing'
+        'id_pembimbing',
+        'ttd',
+        'status'
     ];
     protected $hidden = [
         'password',

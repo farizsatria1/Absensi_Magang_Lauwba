@@ -14,13 +14,17 @@ return new class extends Migration
         Schema::create('progress', function (Blueprint $table) {
             $table->id();
             $table->unsignedBigInteger('id_pekerjaan')->nullable();
+            $table->unsignedBigInteger('trainer_pembimbing')->nullable();
+            $table->unsignedBigInteger('trainer_peserta')->nullable();
             $table->text('catatan');
             $table->string('foto_dokumentasi');
-            $table->string('trainer');
+            $table->enum('peserta_approve',['0','1'])->default('0');
             $table->enum('status',['0','1'])->default('0');
             $table->timestamps();
 
             $table->foreign('id_pekerjaan')->references('id')->on('pekerjaan')->onDelete('cascade');
+            $table->foreign('trainer_pembimbing')->references('id')->on('pembimbing')->onDelete('cascade');
+            $table->foreign('trainer_peserta')->references('id')->on('peserta')->onDelete('cascade');
         });
     }
 

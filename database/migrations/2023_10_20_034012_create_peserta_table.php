@@ -20,6 +20,7 @@ return new class extends Migration
             $table->unsignedBigInteger('id_pembimbing')->nullable();
             $table->string('asal_sekolah')->nullable();
             $table->string('ttd');
+            $table->enum('status',['aktif','non-aktif'])->default('aktif');
             $table->string('username')->unique();
             $table->string('password');
             $table->timestamps();
