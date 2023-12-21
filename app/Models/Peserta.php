@@ -36,4 +36,14 @@ class Peserta extends Model
     {
         return $this->hasMany(Pekerjaan::class, 'id_peserta');
     }
+
+    public function presensi_masuk(): HasMany
+    {
+        return $this->hasMany(PresensiMasuk::class, 'id_peserta');
+    }
+
+    public function presensi_pulang(): HasMany
+    {
+        return $this->hasMany(PresensiPulang::class, 'id_peserta');
+    }
 }

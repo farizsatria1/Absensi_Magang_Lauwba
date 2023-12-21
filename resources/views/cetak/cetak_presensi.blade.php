@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Progress Peserta Magang</title>
+    <title>Presensi Peserta Magang</title>
     <style>
         h3 {
             margin-bottom: 50px;
@@ -77,12 +77,19 @@
                 @foreach($presensiMasuk as $index => $item)
                 <tr>
                     <td align="center">{{ $index + 1 }}</td>
-                    <td align="left" style="white-space: nowrap; width: 1%;">
-                        <?php setlocale(LC_TIME, 'id_ID'); ?>
-                        {{ strftime('%A, %e %B %Y', strtotime($item->created_at)) }}
+                    <td align="left">
+                        <!-- Ganti dengan created_at dari keterangan jika $item->created_at kosong -->
+                        {{ $item->created_at ? $item->created_at->locale('id')->isoFormat('dddd, D MMMM YYYY') : ($item->keterangan ? $item->keterangan->created_at->locale('id')->isoFormat('dddd, D MMMM YYYY') : '-') }}
                     </td>
-
-                    <td align="center">{{ $item->jam_masuk }}</td>
+                    <td align="center">{{ \Carbon\Carbon::parse($item->jam_masuk)->format('H:i') }}</td>
+                    <td align="center">
+                        <!-- Check if there is a presensiPulang entry and it belongs to the same day -->
+                        @if($item->presensiPulang)
+                        {{ \Carbon\Carbon::parse($item->presensiPulang->jam_pulang)->format('H:i') }}
+                        @else
+                        -
+                        @endif
+                    </td>
                 </tr>
                 @endforeach
             </tbody>

@@ -94,15 +94,27 @@ class WebPesertaController extends Controller
         // Find the Peserta by ID
         $peserta = Peserta::findOrFail($id);
 
-        if (Storage::disk('public')->exists('images/' . $peserta->ttd)) {
-            // Hapus gambar dari penyimpanan jika ada
-            Storage::disk('public')->delete('images/' . $peserta->ttd);
+        // Get the directory path associated with the Peserta
+        $directoryPath = 'images/' . $peserta->id;
+
+        // Check if the directory exists
+        if (Storage::disk('public')->exists($directoryPath)) {
+            // Delete all files in the directory
+            $files = Storage::disk('public')->files($directoryPath);
+            Storage::disk('public')->delete($files);
+
+            // Delete the directory
+            Storage::disk('public')->deleteDirectory($directoryPath);
         }
+
+        // Delete the Peserta
         $peserta->delete();
+
         // Redirect back or to a specific route
-        Alert::success('Success', 'Akun Peserta berhasil di Hapus');
+        Alert::success('Success', 'Akun Peserta berhasil dihapus');
         return redirect()->route('peserta.index');
     }
+
 
     public function edit($id)
     {

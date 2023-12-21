@@ -79,29 +79,31 @@
                 @foreach($progress as $index => $item)
                 <tr>
                     <td align="center">{{ $index + 1 }}</td>
-                    <td align="left" style="white-space: nowrap; width: 1%;">{{ date('j-n-Y', strtotime($item->created_at)) }}</td>
+                    <td align="left">
+                        {{ ($item->created_at)->locale('id')->isoFormat('dddd, D MMMM YYYY') }}
+                    </td>
                     <td align="left">{{ $item->pekerjaan->judul }}</td>
                     <td align="left">{{ $item->catatan }}</td>
                     <td align="left">
                         @if ($item->foto_dokumentasi)
-                        <img src="https://api.qrserver.com/v1/create-qr-code/?size=150x150&data={{ url($item->foto_dokumentasi) }}" alt="Gambar tidak tersedia" width="60" style="display: block; margin: 0 auto;">
+                        <img src="https://api.qrserver.com/v1/create-qr-code/?size=150x150&data={{ url('storage/images/' . $item->foto_dokumentasi) }}" alt="Gambar tidak tersedia" width="60" style="display: block; margin: 0 auto;">
                         @else
                         Gambar tidak tersedia
                         @endif
                     </td>
-                    <td align="left">
+                    <td align="center">
                         @if ($item->peserta && $item->peserta->ttd)
-                        <img src="{{ Storage::url('public/images/' . $item->peserta->ttd) }}" alt="TTD" width="70" style="display: block; margin: 0 auto;">
+                        <img src="{{ Storage::url('public/images/' . $item->peserta->ttd) }}" alt="TTD" width="70" style="display: block; margin: 0 auto;"><br>
+                        {{ $item->peserta->nama }}
                         @else
                             @if ($item->pembimbing && $item->pembimbing->ttd)
-                            <img src="{{ Storage::url('public/images/' . $item->pembimbing->ttd) }}" alt="TTD Pembimbing" width="70" style="display: block; margin: 0 auto;">
+                            <img src="{{ Storage::url('public/images/' . $item->pembimbing->ttd) }}" alt="TTD Pembimbing" width="70" style="display: block; margin: 0 auto;"><br>
+                            {{ $item->pembimbing->nama }}
                         @else
                         Tanda tangan tidak tersedia
                             @endif
                         @endif
                     </td>
-
-
                 </tr>
                 @endforeach
             </tbody>

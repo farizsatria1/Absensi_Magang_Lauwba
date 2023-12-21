@@ -21,6 +21,10 @@ class WebProgressController extends Controller
             $query->where('id_peserta', $id_peserta);
         })->with(['peserta', 'pembimbing'])->get();
 
+        if ($progress->isEmpty()) {
+            return view('cetak.notfound.404_progress');
+        }
+
         return view('cetak.cetak_progress', ['progress' => $progress]);
     }
 
@@ -33,7 +37,7 @@ class WebProgressController extends Controller
         })->whereMonth('created_at', $bulan)->with(['peserta', 'pembimbing'])->get();
 
         if ($progress->isEmpty()) {
-            return abort(404);
+            return view('cetak.notfound.404_progress');
         }
 
         return view('cetak.cetak_progress', ['progress' => $progress]);
@@ -51,6 +55,7 @@ class WebProgressController extends Controller
 
         // Ambil daftar peserta
         $pesertaList = Peserta::pluck('nama', 'id');
+        // dd($pesertaList);
 
         return view('peserta.progress.progress', [
             'progress' => $progress,

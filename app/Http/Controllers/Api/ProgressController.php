@@ -94,22 +94,20 @@ class ProgressController extends Controller
                 $peserta = Peserta::findOrFail($data['trainer_peserta']);
             }
 
+            $imageName = null; // Initialize imageName as null
+
             if ($request->hasFile('foto_dokumentasi')) {
                 $image = $request->file('foto_dokumentasi');
                 $imageName = time() . '_' . $image->getClientOriginalName();
                 $image->storeAs('public/images', $imageName); // simpan gambar di storage dengan nama yang unik
-                $imageUrl = url('/') . Storage::url('images/' . $imageName); // mendapatkan URL gambar dari storage
-            } else {
-                $imageName = null;
-                $imageUrl = null;
             }
 
             $progress = ProgressMagang::create([
-                'id_pekerjaan' => $pekerjaan->id, // Gunakan id_pekerjaan dari model Pekerjaan
+                'id_pekerjaan' => $pekerjaan->id,
                 'catatan' => $data['catatan'],
-                'trainer_pembimbing' => $pembimbing != null ? $pembimbing->id : null, // Gunakan id_pekerjaan dari model Pekerjaan
-                'trainer_peserta' => $peserta != null ? $peserta->id : null, // Gunakan id_pekerjaan dari model Pekerjaan
-                'foto_dokumentasi' => $imageUrl, // simpan URL gambar di database
+                'trainer_pembimbing' => $pembimbing != null ? $pembimbing->id : null,
+                'trainer_peserta' => $peserta != null ? $peserta->id : null,
+                'foto_dokumentasi' => $imageName, // Store only the image name in the database
             ]);
 
             return response()->json(['message' => 'Data progress magang berhasil ditambahkan.'], 201);
@@ -117,6 +115,7 @@ class ProgressController extends Controller
             return response()->json(['message' => $e->getMessage()], 500);
         }
     }
+
 
     public function updateStatus(Request $request, $id)
     {

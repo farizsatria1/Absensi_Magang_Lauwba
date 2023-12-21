@@ -19,11 +19,11 @@
                 <div class="card">
                     <div class="card-body">
                         <div class="table-responsive">
-                            <form method="get" action="{{ route('progress.filter') }}">
+                            <form id="filterForm" method="get" action="{{ route('progress.filter') }}">
                                 @csrf
                                 <div class="form-group">
                                     <label for="participant">Nama Peserta:</label>
-                                    <select class="form-control" id="participant" name="participant">
+                                    <select class="form-control" id="participant" name="participant" onchange="submitForm()">
                                         <option value="">--Pilih Peserta--</option>
                                         @php
                                         $selectedPeserta = request('participant');
@@ -35,9 +35,17 @@
                                         @endforeach
                                     </select>
                                 </div>
-                                <button type="submit" class="btn btn-primary mb-3">Filter</button>
                             </form>
-                            <table class="table table-bordered table-striped text-center">
+
+                            <!-- Display the "Cetak" button only if a participant is selected -->
+                            @if ($selectedPeserta)
+                            <a href="/cetak-progress/{{$selectedPeserta}}" class="btn btn-primary mb-3 br-10">
+                                <i class="fas fa-print mr-1"></i> Cetak
+                            </a>
+
+                            @endif
+
+                            <table class="table table-b ordered table-striped text-center">
                                 <thead>
                                     <tr>
                                         <th>No</th>
@@ -56,7 +64,7 @@
                                         <td class="align-middle">{{ $item->catatan }}</td>
                                         <td style="text-align: center;">
                                             @if ($item->foto_dokumentasi)
-                                            <img src="{{ asset($item->foto_dokumentasi) }}" alt="$item->pekerjaan->judul" width="100" style="display: block; margin: 0 auto;">
+                                            <img src="{{ Storage::url('public/images/' . $item->foto_dokumentasi) }}" alt="Gambar tidak tersedia" width="100" style="display: block; margin: 0 auto;">
                                             @else
                                             Gambar tidak tersedia
                                             @endif
@@ -74,4 +82,11 @@
         </div>
     </div>
 </div>
+
+<script>
+    function submitForm() {
+        document.getElementById("filterForm").submit();
+    }
+</script>
+
 @endsection
