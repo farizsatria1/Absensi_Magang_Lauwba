@@ -73,6 +73,7 @@ Route::get('/login', [WebLoginController::class, 'showlogin'])->name('login');
 Route::post('/login', [WebLoginController::class, 'login']);
 
 Route::get('/cetak-progress/{id_peserta}', [WebProgressController::class, 'cetakProgressAll'])->name('cetak.progress');
+Route::get('/export_excel/{id_peserta}', [WebProgressController::class, 'export_excel']);
 Route::get('/cetak-progress/bulanan/{id_peserta}', [WebProgressController::class, 'cetakProgressBulanan']);
 
 Route::get('/cetak-absen/{id_peserta}', [WebPresensiController::class, 'index']);

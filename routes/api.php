@@ -43,6 +43,7 @@ Route::get('/progress/{id_peserta}', [ProgressController::class, 'index']);
 Route::get('/progress', [ProgressController::class, 'progress']);
 Route::get('/progress-magang/{id_peserta}', [ProgressController::class, 'progressByPeserta']);
 Route::get('/allProgress/{id_pembimbing}', [ProgressController::class, 'allProgress']);
+Route::post('/progress/{id}/update-progress', [ProgressController::class, 'updateProgress']);
 Route::put('/progress/{id}/update-status', [ProgressController::class, 'updateStatus']);
 Route::put('/progress/{id}/update-approve', [ProgressController::class, 'updatePesertaApprove']);
 

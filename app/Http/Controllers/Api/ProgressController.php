@@ -7,6 +7,7 @@ use App\Models\Pekerjaan;
 use App\Models\Pembimbing;
 use App\Models\Peserta;
 use App\Models\ProgressMagang;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 
@@ -32,7 +33,7 @@ class ProgressController extends Controller
     public function progress()
     {
         $progressMagang = ProgressMagang::with(['pekerjaan' => function ($query) {
-            $query->with('peserta:id,nama');
+            $query->with('peserta:id,nama,nama_pgl,status,id_pembimbing');
         }])
             ->with('pembimbing:id,nama')
             ->with('peserta:id,nama')
@@ -108,6 +109,7 @@ class ProgressController extends Controller
                 'trainer_pembimbing' => $pembimbing != null ? $pembimbing->id : null,
                 'trainer_peserta' => $peserta != null ? $peserta->id : null,
                 'foto_dokumentasi' => $imageName, // Store only the image name in the database
+                'created_at' => now(),
             ]);
 
             return response()->json(['message' => 'Data progress magang berhasil ditambahkan.'], 201);
@@ -116,12 +118,50 @@ class ProgressController extends Controller
         }
     }
 
+    public function updateProgress(Request $request, $id)
+    {
+        try {
+            $data = $request->validate([
+                'catatan' => 'required',
+                'foto_dokumentasi' => 'image|max:2048',
+            ]);
+
+            // Ambil id_progress dari tabel progress_magang
+            $progress = ProgressMagang::findOrFail($id);
+
+            $oldImageName = $progress->foto_dokumentasi; // Get the current image name
+
+            // Delete the old image
+            Storage::delete('public/images/' . $oldImageName);
+
+            if ($request->hasFile('foto_dokumentasi')) {
+                $image = $request->file('foto_dokumentasi');
+                $newImageName = time() . '_' . $image->getClientOriginalName();
+                $image->storeAs('public/images', $newImageName); // simpan gambar di storage dengan nama yang unik
+
+                $progress->update([
+                    'catatan' => $data['catatan'],
+                    'foto_dokumentasi' => $newImageName, // Store only the image name in the database
+                ]);
+            } else {
+                $progress->update([
+                    'catatan' => $data['catatan'],
+                ]);
+            }
+
+            return response()->json(['message' => 'Data progress magang berhasil diperbarui.'], 200);
+        } catch (\Exception $e) {
+            return response()->json(['message' => $e->getMessage()], 500);
+        }
+    }
+
+
 
     public function updateStatus(Request $request, $id)
     {
         try {
             $data = $request->validate([
-                'status' => 'required|in:0,1', // Status harus 0 atau 1
+                'status' => 'required|in:0,1,2', // Status harus 0 atau 1
             ]);
 
             // Temukan progress magang berdasarkan ID

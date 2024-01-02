@@ -65,23 +65,43 @@
             <li><b>Asal Sekolah </b>: <span style="margin-left:10px;">{{ $progress[0]->pekerjaan->peserta->asal_sekolah }}</span></li>
         </div>
         <button class="print-button" onclick="printPage()">Cetak Progress</button>
+        <a href="/export_excel/{{ $progress[0]->pekerjaan->peserta->id }}" class="print-button">Export to Excel</a>
 
         <table align="center" rules="all" border="1px">
-            <tr>
-                <th>No</th>
-                <th>Tanggal</th>
-                <th>Judul</th>
-                <th>Catatan</th>
-                <th>Dokumentasi</th>
-                <th>TTD</th>
-            </tr>
-            <tbody>
-                @foreach($progress as $index => $item)
+            <thead>
                 <tr>
-                    <td align="center">{{ $index + 1 }}</td>
+                    <th>No</th>
+                    <th>Tanggal</th>
+                    <th>Project</th>
+                    <th>Catatan</th>
+                    <th>Dokumentasi</th>
+                    <th>TTD</th>
+                </tr>
+            </thead>
+            <tbody>
+                @php
+                    $currentNo = 0;
+                    $recentDate = "";
+                @endphp
+                @foreach($progress as $index => $item)
+
+                <tr>
+                    @if ( ($item->created_at)->locale('id')->isoFormat('dddd, D MMMM YYYY') != $recentDate)
+                        @php
+                            $currentNo++;
+                        @endphp
+                        <td align="center">{{ $currentNo }}</td>
+                    @else
+                        <td align="center"></td>
+                    @endif
+
                     <td align="left">
                         {{ ($item->created_at)->locale('id')->isoFormat('dddd, D MMMM YYYY') }}
                     </td>
+
+                    @php
+                        $recentDate =  ($item->created_at)->locale('id')->isoFormat('dddd, D MMMM YYYY');
+                    @endphp
                     <td align="left">{{ $item->pekerjaan->judul }}</td>
                     <td align="left">{{ $item->catatan }}</td>
                     <td align="left">
@@ -92,16 +112,15 @@
                         @endif
                     </td>
                     <td align="center">
-                        @if ($item->peserta && $item->peserta->ttd)
+                        @if ($item->peserta && $item->peserta->ttd && $item->peserta_approve == 1 && $item->status == 1)
                         <img src="{{ Storage::url('public/images/' . $item->peserta->ttd) }}" alt="TTD" width="70" style="display: block; margin: 0 auto;"><br>
                         {{ $item->peserta->nama }}
                         @else
-                            @if ($item->pembimbing && $item->pembimbing->ttd)
+                            @if ($item->pembimbing && $item->pembimbing->ttd && $item->status == 1)
                             <img src="{{ Storage::url('public/images/' . $item->pembimbing->ttd) }}" alt="TTD Pembimbing" width="70" style="display: block; margin: 0 auto;"><br>
                             {{ $item->pembimbing->nama }}
                         @else
-                        Tanda tangan tidak tersedia
-                            @endif
+                        @endif
                         @endif
                     </td>
                 </tr>
@@ -116,6 +135,6 @@
         }
     </script>
 
-</body>
+</body> 
 
 </html>

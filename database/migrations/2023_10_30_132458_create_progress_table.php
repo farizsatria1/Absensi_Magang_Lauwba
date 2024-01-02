@@ -19,7 +19,7 @@ return new class extends Migration
             $table->text('catatan');
             $table->string('foto_dokumentasi');
             $table->enum('peserta_approve',['0','1'])->default('0');
-            $table->enum('status',['0','1'])->default('0');
+            $table->enum('status',['0','1','2'])->default('0');
             $table->timestamps();
 
             $table->foreign('id_pekerjaan')->references('id')->on('pekerjaan')->onDelete('cascade');
